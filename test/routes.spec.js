@@ -55,6 +55,22 @@ describe("GET /api/v1/favorites/:id", () => {
   })
 });
 
+describe("GET /api/v1/playlists", () => {
+  it("should return all of the playlists", done => {
+    chai.request(server)
+    .get("/api/v1/playlists")
+    .end((err, response) => {
+      response.should.have.status(200);
+      response.should.be.json;
+      response.body.should.be.a('array');
+      response.body.length.should.equal(1);
+      response.body[0].should.have.property('playlist_name');
+      response.body[0].playlist_name.should.equal('Birthday Songs');
+      done();
+    });
+  })
+});
+
 
 describe("My API routes", () => {
   before((done) => {
