@@ -51,6 +51,22 @@ app.get('/api/v1/playlists', (request, response) => {
     });
 });
 
+app.get('/api/v1/playlists/:id', (request, response) => {
+  database('playlists').where('id', request.params.id).select()
+    .then(playlists => {
+      if (playlists.length) {
+        response.status(200).json(playlists);
+      } else {
+        response.status(404).json({
+          error: `Could not find playlist with id ${request.params.id}`
+        });
+      }
+    })
+    .catch(error => {
+      response.status(500).json({ error });
+    });
+});
+
 app.listen(app.get('port'), () => {
   console.log(`${app.locals.title} is running on ${app.get('port')}.`);
 });

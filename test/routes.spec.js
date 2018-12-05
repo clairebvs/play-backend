@@ -81,7 +81,7 @@ describe("GET /api/v1/playlists/:id", () => {
       response.body.should.be.a('array');
       response.body.length.should.equal(1);
       response.body[0].should.have.property('id');
-      response.body[0].id.should.equal('1');
+      response.body[0].id.should.equal(1);
       response.body[0].should.have.property('playlist_name');
       response.body[0].playlist_name.should.equal('Birthday Songs');
       done();
