@@ -89,6 +89,37 @@ describe("GET /api/v1/playlists/:id", () => {
   })
 });
 
+describe("POST /api/v1/favorites", () => {
+  it("should add a new favorite song to the database", done => {
+    chai.request(server)
+    .post("/api/v1/favorites")
+    .send({ "songs": {
+        "name": "Feliz Cumpleanos",
+        "artist_name": "Becca",
+        "genre": "Pop",
+        "song_rating": 100,
+      }
+    })
+    .end((err, response) => {
+      response.should.have.status(200);
+      response.should.be.json;
+      response.body.should.be.a('array');
+      response.body.length.should.equal(1);
+      response.body[0].should.have.property('id');
+      response.body[0].should.have.property('name');
+      response.body[0].should.have.property('artist_name');
+      response.body[0].should.have.property('genre');
+      response.body[0].should.have.property('song_rating');
+      response.body[0].id.should.equal(1);
+      response.body[0].name.should.equal('Feliz Cumpleanos');
+      response.body[0].artist_name.should.equal('Becca');
+      response.body[0].genre.should.equal('Pop');
+      response.body[0].song_rating.should.equal('100');
+      done();
+    });
+  })
+});
+
 
 describe("My API routes", () => {
   before((done) => {
