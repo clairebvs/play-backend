@@ -67,6 +67,26 @@ app.get('/api/v1/playlists/:id', (request, response) => {
     });
 });
 
+app.post('/api/v1/favorites', (request, response) => {
+  const favorite = request.body;
+
+  for (let requiredParameter of ['name', 'artist_name', 'genre', 'song_rating']) {
+    if (!favorite[requiredParameter]) {
+      return response
+        .status(422)
+        .send({ error: `Expected format: { 'name': <String>, artist_name: <String>, 'genre': <String>, 'song_rating': <Integer> } You're missing a "${requiredParameter}" property.`});
+    }
+  }
+
+  database('favorites').insert(favorite, '*')
+    .then(favorite => {
+      response.status(201).json({"songs": favorite[0] });
+    })
+    .catch(error => {
+      response.status(500).json({ error });
+    });
+});
+
 app.listen(app.get('port'), () => {
   console.log(`${app.locals.title} is running on ${app.get('port')}.`);
 });

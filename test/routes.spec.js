@@ -9,6 +9,7 @@ const server = require('../server');
 
 chai.use(chaiHttp);
 
+
 describe("GET /api/v1/favorites", () => {
   it("should return all of the favorites", done => {
     chai.request(server)
@@ -93,17 +94,17 @@ describe("POST /api/v1/favorites", () => {
   it("should add a new favorite song to the database", done => {
     chai.request(server)
     .post("/api/v1/favorites")
-    .send({ "songs": {
-        "name": "Feliz Cumpleanos",
-        "artist_name": "Becca",
-        "genre": "Pop",
-        "song_rating": 100,
-      }
+    .send({
+        name: "Feliz Cumpleanos",
+        artist_name: "Becca",
+        genre: "Pop",
+        song_rating: 100
     })
     .end((err, response) => {
-      response.should.have.status(200);
+      should.exist(response.body)
+      response.should.have.status(201);
       response.should.be.json;
-      response.body.should.be.a('array');
+      response.body.should.be.a('object');
       response.body.length.should.equal(1);
       response.body[0].should.have.property('id');
       response.body[0].should.have.property('name');
@@ -124,10 +125,10 @@ describe("POST /api/v1/favorites", () => {
 describe("My API routes", () => {
   before((done) => {
     database.migrate.latest()
-      .then( () => done())
-      .catch(error => {
-        throw error;
-      });
+    .then( () => done())
+    .catch(error => {
+      throw error;
+    });
   });
 
   beforeEach((done) => {
