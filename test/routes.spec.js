@@ -1,13 +1,31 @@
-// pulling in packages / give us access to those library
 const chai = require('chai');
-// equivalent of capybara shoulda-matchers
 const should = chai.should();
-// call chai-http
 const chaiHttp = require('chai-http');
-// pulling our own server file
 const server = require('../server');
 
+const environment = process.env.NODE_ENV || 'development';
+const configuration = require('../knexfile')[environment];
+const database = require('knex')(configuration);
+
 chai.use(chaiHttp);
+
+describe("My API routes", () => {
+  before((done) => {
+    database.migrate.latest()
+      .then( () => done())
+      .catch(error => {
+        throw error;
+      });
+  });
+
+  beforeEach((done) => {
+    database.seed.run()
+    .then( () => done())
+    .catch(error => {
+      throw error;
+    });
+  });
+});
 
 describe("GET /api/v1/favorites", () => {
   it("should return all of the favorites", done => {
@@ -55,6 +73,18 @@ describe("GET /api/v1/favorites/:id", () => {
   })
 });
 
+describe("DELETE /api/v1/favorites/:id", () => {
+  it("should delete a favorite by id", done => {
+    chai.request(server)
+    .delete("/api/v1/favorites/1")
+    .end((err, response) => {
+      response.should.have.status(204);
+      response.body.should.be.a('object');
+      done();
+    });
+  })
+});
+
 describe("GET /api/v1/playlists", () => {
   it("should return all of the playlists", done => {
     chai.request(server)
@@ -87,23 +117,4 @@ describe("GET /api/v1/playlists/:id", () => {
       done();
     });
   })
-});
-
-
-describe("My API routes", () => {
-  before((done) => {
-    database.migrate.latest()
-      .then( () => done())
-      .catch(error => {
-        throw error;
-      });
-  });
-
-  beforeEach((done) => {
-    database.seed.run()
-    .then( () => done())
-    .catch(error => {
-      throw error;
-    });
-  });
 });
