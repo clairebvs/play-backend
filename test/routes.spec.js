@@ -1,10 +1,6 @@
-// pulling in packages / give us access to those library
 const chai = require('chai');
-// equivalent of capybara shoulda-matchers
 const should = chai.should();
-// call chai-http
 const chaiHttp = require('chai-http');
-// pulling our own server file
 const server = require('../server');
 
 chai.use(chaiHttp);
@@ -50,6 +46,20 @@ describe("GET /api/v1/favorites/:id", () => {
       response.body[0].artist_name.should.equal('Becca and Claire');
       response.body[0].genre.should.equal('Pop');
       response.body[0].song_rating.should.equal('100');
+      done();
+    });
+  })
+});
+
+describe("DELETE /api/v1/favorites/:id", () => {
+  it("should delete a favorite by id", done => {
+    chai.request(server)
+    .delete("/api/v1/favorites/1")
+    .end((err, response) => {
+      response.should.have.status(200);
+      response.should.be.json;
+      response.body.should.be.a('array');
+      response.body.should.have.property('message').eql('Song successfully removed from favorites!');
       done();
     });
   })
