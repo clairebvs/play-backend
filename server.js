@@ -11,6 +11,8 @@ app.use(bodyParser.urlencoded( { extended: true }));
 app.set('port', process.env.PORT || 3000);
 app.locals.title = 'Play';
 
+pry = require('pryjs')
+
 app.get('/', (request, response) => {
   response.send('Hello, Play');
 });
@@ -33,6 +35,23 @@ app.get('/api/v1/favorites/:id', (request, response) => {
       } else {
         response.status(404).json({
           error: `Could not find favorite with id ${request.params.id}`
+        });
+      }
+    })
+    .catch((error) => {
+      response.status(500).json({ error });
+    });
+});
+
+app.delete('/api/v1/favorites/:id', (request, response) => {
+  database('favorites').where('id', request.params.id).remove()
+    .then(favorites => {
+
+      if (favorites.length === 0) {
+        response.status(200).json(favorites);
+      } else {
+        response.status(404).json({
+          error: `Could not delete favorite with id ${request.params.id}`
         });
       }
     })
@@ -62,7 +81,7 @@ app.get('/api/v1/playlists/:id', (request, response) => {
         });
       }
     })
-    .catch(error => {
+    .catch((error) => {
       response.status(500).json({ error });
     });
 });
