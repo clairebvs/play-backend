@@ -7,7 +7,8 @@ exports.up = function(knex, Promise) {
         .references('playlists.id');
       table.integer('favorite_id').unsigned()
       table.foreign('favorite_id')
-        .references('favorites.id');
+        .references('favorites.id')
+        .onDelete('CASCADE');
 
       table.timestamps(true, true);
     }),

@@ -79,8 +79,7 @@ describe("DELETE /api/v1/favorites/:id", () => {
     .delete("/api/v1/favorites/1")
     .end((err, response) => {
       response.should.have.status(204);
-      res.body.should.be.a('object');
-      response.body.should.have.property('message').eql('Song successfully removed from favorites!');
+      response.body.should.be.a('object');
       done();
     });
   })

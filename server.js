@@ -11,7 +11,6 @@ app.use(bodyParser.urlencoded( { extended: true }));
 app.set('port', process.env.PORT || 3000);
 app.locals.title = 'Play';
 
-pry = require('pryjs')
 
 app.get('/', (request, response) => {
   response.send('Hello, Play');
@@ -46,8 +45,7 @@ app.get('/api/v1/favorites/:id', (request, response) => {
 app.delete('/api/v1/favorites/:id', (request, response) => {
   database('favorites').where('id', request.params.id).del()
     .then(() => {
-      response.status(204).json({
-      message: `Song ${request.params.id} successfully removed from favorites` })
+      return response.status(204).send({ message: `Song ${request.params.id} successfully removed from favorites`})
     })
     .catch((error) => {
       response.status(404).json({ error });
