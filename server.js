@@ -44,19 +44,13 @@ app.get('/api/v1/favorites/:id', (request, response) => {
 });
 
 app.delete('/api/v1/favorites/:id', (request, response) => {
-  database('favorites').where('id', request.params.id).remove()
-    .then(favorites => {
-
-      if (favorites.length === 0) {
-        response.status(200).json(favorites);
-      } else {
-        response.status(404).json({
-          error: `Could not delete favorite with id ${request.params.id}`
-        });
-      }
+  database('favorites').where('id', request.params.id).del()
+    .then(() => {
+      response.status(204).json({
+      message: `Song ${request.params.id} successfully removed from favorites` })
     })
-    .catch(error => {
-      response.status(500).json({ error });
+    .catch((error) => {
+      response.status(404).json({ error });
     });
 });
 
