@@ -1,3 +1,6 @@
+const express = require('express');
+const app = express();
+const bodyParser = require('body-parser');
 // pulling in packages / give us access to those library
 const chai = require('chai');
 // equivalent of capybara shoulda-matchers
@@ -57,8 +60,10 @@ describe("My API routes", () => {
 
   describe("GET /api/v1/favorites/:id", () => {
     it("should return a favorite by id", done => {
-      chai.request(server)
-      .get("/api/v1/favorites/1")
+      app.get('/api/v1/favorites/:id', (request, response) => {
+        const requested_id = database('favorites').where('id', request.params.id).select();
+        chai.request(server)
+      .get(`/api/v1/favorites/${requested_id}`)
       .end((err, response) => {
         response.should.have.status(200);
         response.should.be.json;
@@ -76,7 +81,9 @@ describe("My API routes", () => {
         response.body[0].song_rating.should.equal('100');
         done();
       });
+      });
     })
+    // .timeout(1000000000)
   });
 
   describe("GET /api/v1/playlists", () => {
