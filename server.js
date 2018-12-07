@@ -11,6 +11,7 @@ app.use(bodyParser.urlencoded( { extended: true }));
 app.set('port', process.env.PORT || 3000);
 app.locals.title = 'Play';
 
+
 app.get('/', (request, response) => {
   response.send('Hello, Play');
 });
@@ -37,8 +38,18 @@ app.get('/api/v1/favorites/:id', (request, response) => {
         });
       }
     })
-    .catch(error => {
+    .catch((error) => {
       response.status(500).json({ error });
+    });
+});
+
+app.delete('/api/v1/favorites/:id', (request, response) => {
+  database('favorites').where('id', request.params.id).del()
+    .then(() => {
+      return response.status(204).send({ message: `Song ${request.params.id} successfully removed from favorites`})
+    })
+    .catch((error) => {
+      response.status(404).json({ error });
     });
 });
 
@@ -63,7 +74,7 @@ app.get('/api/v1/playlists/:id', (request, response) => {
         });
       }
     })
-    .catch(error => {
+    .catch((error) => {
       response.status(500).json({ error });
     });
 });

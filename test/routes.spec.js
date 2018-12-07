@@ -1,13 +1,6 @@
-const express = require('express');
-const app = express();
-const bodyParser = require('body-parser');
-// pulling in packages / give us access to those library
 const chai = require('chai');
-// equivalent of capybara shoulda-matchers
 const should = chai.should();
-// call chai-http
 const chaiHttp = require('chai-http');
-// pulling our own server file
 const server = require('../server');
 
 const environment = process.env.NODE_ENV || 'development';
@@ -15,8 +8,6 @@ const configuration = require('../knexfile')[environment];
 const database = require('knex')(configuration);
 
 chai.use(chaiHttp);
-
-pry = require('pryjs')
 
 describe("My API routes", () => {
   before((done) => {
