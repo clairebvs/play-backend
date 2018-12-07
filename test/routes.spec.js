@@ -60,30 +60,28 @@ describe("My API routes", () => {
 
   describe("GET /api/v1/favorites/:id", () => {
     it("should return a favorite by id", done => {
-      app.get('/api/v1/favorites/:id', (request, response) => {
-        const requested_id = database('favorites').where('id', request.params.id).select();
+      database('favorites').select('*').then(data => resolve(data))
+      function resolve(favorite) {
         chai.request(server)
-      .get(`/api/v1/favorites/${requested_id}`)
-      .end((err, response) => {
-        response.should.have.status(200);
-        response.should.be.json;
-        response.body.should.be.a('array');
-        response.body.length.should.equal(1);
-        response.body[0].should.have.property('id');
-        response.body[0].should.have.property('name');
-        response.body[0].should.have.property('artist_name');
-        response.body[0].should.have.property('genre');
-        response.body[0].should.have.property('song_rating');
-        response.body[0].id.should.equal(1);
-        response.body[0].name.should.equal('Happy Birthday');
-        response.body[0].artist_name.should.equal('Becca and Claire');
-        response.body[0].genre.should.equal('Pop');
-        response.body[0].song_rating.should.equal('100');
-        done();
-      });
-      });
-    })
-    // .timeout(1000000000)
+        .get(`/api/v1/favorites/${favorite[0].id}`)
+        .end((err, response) => {
+          response.should.have.status(200);
+          response.should.be.json;
+          response.body.should.be.a('array');
+          response.body.length.should.equal(1);
+          response.body[0].should.have.property('id');
+          response.body[0].should.have.property('name');
+          response.body[0].should.have.property('artist_name');
+          response.body[0].should.have.property('genre');
+          response.body[0].should.have.property('song_rating');
+          response.body[0].name.should.equal('Happy Birthday');
+          response.body[0].artist_name.should.equal('Becca and Claire');
+          response.body[0].genre.should.equal('Pop');
+          response.body[0].song_rating.should.equal('100');
+          done();
+        });
+      };
+    });
   });
 
   describe("GET /api/v1/playlists", () => {

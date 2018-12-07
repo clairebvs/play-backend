@@ -29,6 +29,7 @@ app.get('/api/v1/favorites/:id', (request, response) => {
   database('favorites').where('id', request.params.id).select()
     .then(favorites => {
       if (favorites.length) {
+        console.log(favorites.length);
         response.status(200).json(favorites);
       } else {
         response.status(404).json({
