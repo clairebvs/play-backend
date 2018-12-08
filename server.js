@@ -16,6 +16,8 @@ app.get('/', (request, response) => {
   response.send('Hello, Play');
 });
 
+// ----- FAVORITES ENDPOINTS ----- //
+
 app.get('/api/v1/favorites', (request, response) => {
   database('favorites').select()
     .then((favorites) => {
@@ -43,6 +45,26 @@ app.get('/api/v1/favorites/:id', (request, response) => {
     });
 });
 
+app.post('/api/v1/favorites', (request, response) => {
+  const favorite = request.body;
+
+  for (let requiredParameter of ['name', 'artist_name', 'genre', 'song_rating']) {
+    if (!favorite[requiredParameter]) {
+      return response
+      .status(422)
+      .send({ error: `Expected format: { 'name': <String>, artist_name: <String>, 'genre': <String>, 'song_rating': <Integer> } You're missing a "${requiredParameter}" property.`});
+    }
+  }
+
+  database('favorites').insert(favorite, '*')
+  .then(favorite => {
+    response.status(201).json({"songs": favorite[0] });
+  })
+  .catch(error => {
+    response.status(500).json({ error });
+  });
+});
+
 app.delete('/api/v1/favorites/:id', (request, response) => {
   database('favorites').where('id', request.params.id).del()
     .then(() => {
@@ -52,6 +74,8 @@ app.delete('/api/v1/favorites/:id', (request, response) => {
       response.status(404).json({ error });
     });
 });
+
+// ----- PLAYLISTS ENDPOINTS ----- //
 
 app.get('/api/v1/playlists', (request, response) => {
   database('playlists').select()
@@ -75,26 +99,6 @@ app.get('/api/v1/playlists/:id', (request, response) => {
       }
     })
     .catch((error) => {
-      response.status(500).json({ error });
-    });
-});
-
-app.post('/api/v1/favorites', (request, response) => {
-  const favorite = request.body;
-
-  for (let requiredParameter of ['name', 'artist_name', 'genre', 'song_rating']) {
-    if (!favorite[requiredParameter]) {
-      return response
-        .status(422)
-        .send({ error: `Expected format: { 'name': <String>, artist_name: <String>, 'genre': <String>, 'song_rating': <Integer> } You're missing a "${requiredParameter}" property.`});
-    }
-  }
-
-  database('favorites').insert(favorite, '*')
-    .then(favorite => {
-      response.status(201).json({"songs": favorite[0] });
-    })
-    .catch(error => {
       response.status(500).json({ error });
     });
 });
