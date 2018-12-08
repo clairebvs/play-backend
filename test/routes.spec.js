@@ -140,18 +140,18 @@ describe("My API routes", () => {
     });
   });
 
-  describe("PATCH /api/v1/favorites", () => {
-    it("should add a new favorite song to the database", done => {
-      chai.request(server)
-      .patch("/api/v1/favorites/328")
-      .send({
-          genre: "Rock"
-      })
-      .end((err, response) => {
-        should.exist(response.body)
-        response.should.have.status(201);
-        done();
-      });
-    });
-  });
+  // describe("PATCH /api/v1/favorites", () => {
+  //   it("should update a favorite in the database", done => {
+  //     chai.request(server)
+  //     .patch("/api/v1/favorites/328")
+  //     .send({
+  //         genre: "Rock"
+  //     })
+  //     .end((err, response) => {
+  //       should.exist(response.body)
+  //       response.should.have.status(201);
+  //       done();
+  //     });
+  //   });
+  // });
 });
