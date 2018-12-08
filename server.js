@@ -11,6 +11,8 @@ app.use(bodyParser.urlencoded( { extended: true }));
 app.set('port', process.env.PORT || 3000);
 app.locals.title = 'Play';
 
+pry = require('pryjs')
+
 
 app.get('/', (request, response) => {
   response.send('Hello, Play');
@@ -32,7 +34,6 @@ app.get('/api/v1/favorites/:id', (request, response) => {
   database('favorites').where('id', request.params.id).select()
     .then(favorites => {
       if (favorites.length) {
-        console.log(favorites.length);
         response.status(200).json(favorites);
       } else {
         response.status(404).json({
@@ -64,22 +65,22 @@ app.post('/api/v1/favorites', (request, response) => {
     response.status(500).json({ error });
   });
 });
-
-app.patch("/api/v1/favorites/:id", request, response) => {
+// CURRENT METHOD WORKING ON //
+app.patch('/api/v1/favorites/:id', (request, response) => {
+console.log(request.params.id);
   const favorite_id = request.params.id;
   const favorite_params = request.body;
 
-  database('favorites').where("id", favorite_id).update({ favorite_params} )
+  database('favorites').where('id', favorite_id).update({ favorite_params})
   .then(favorite => {
     if (favorite === 0) {
       return response.status(404).json("Favorite not found");
-    } else {
-      return reponse.status(201).json(driver);
+    }
+      return reponse.status(201).json(driver)
     })
     .catch(error => {
       return response.status(500).json({ error });
     });
-  };
 });
 
 app.delete('/api/v1/favorites/:id', (request, response) => {
