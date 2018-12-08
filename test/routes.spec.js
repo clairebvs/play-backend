@@ -1,10 +1,11 @@
+process.env.NODE_ENV = "test";
+
 const chai = require('chai');
 const should = chai.should();
 const chaiHttp = require('chai-http');
 const server = require('../server');
 
-const environment = process.env.NODE_ENV || 'development';
-const configuration = require('../knexfile')[environment];
+const configuration = require('../knexfile')["test"];
 const database = require('knex')(configuration);
 
 pry = require('pryjs')
@@ -17,7 +18,6 @@ describe("My API routes", () => {
     .then(() => {
       database.migrate.latest()
       .then(() => {
-
         database.seed.run()
         .then( () => done())
         .catch(error => {
@@ -51,9 +51,9 @@ describe("My API routes", () => {
 
   describe("GET /api/v1/favorites/:id", () => {
     it("should return a favorite by id", done => {
+      eval(pry.it)
       chai.request(server)
       .get("/api/v1/favorites/1")
-      eval(pry.it)
       .end((err, response) => {
         response.should.have.status(200);
         response.should.be.json;
@@ -71,7 +71,7 @@ describe("My API routes", () => {
         response.body[0].song_rating.should.equal('100');
         done();
       });
-    }).timeout(10000000000)
+    }).timeout(1000000000000000000)
   });
 
   describe("GET /api/v1/playlists", () => {
