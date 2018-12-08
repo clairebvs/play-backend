@@ -79,6 +79,20 @@ app.get('/api/v1/playlists/:id', (request, response) => {
     });
 });
 
+app.get('/api/v1/playlists/:id/songs', (request, response) => {
+  database.raw(`SELECT playlists.id, playlists.playlist_name, array_agg(json_build_object('id', favorites.id, 'name', favorites.name, 'artist_name', favorites.artist_name, 'genre', favorites.genre, 'song_rating', favorites.song_rating)) as songs
+  FROM playlists
+  INNER JOIN song_playlists ON playlists.id = song_playlists.playlist_id
+  INNER JOIN favorites ON favorites.id = song_playlists.favorite_id
+  GROUP BY playlists.id`)
+    .then(favorites => {
+        response.status(200).json(favorites.rows);
+    })
+    .catch((error) => {
+      response.status(500).json({ error });
+    });
+});
+
 app.post('/api/v1/favorites', (request, response) => {
   const favorite = request.body;
 
