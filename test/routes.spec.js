@@ -51,7 +51,6 @@ describe("My API routes", () => {
 
   describe("GET /api/v1/favorites/:id", () => {
     it("should return a favorite by id", done => {
-      eval(pry.it)
       chai.request(server)
       .get("/api/v1/favorites/1")
       .end((err, response) => {
@@ -92,10 +91,8 @@ describe("My API routes", () => {
 
   describe("GET /api/v1/playlists/:id", () => {
     it("should return one playlist by id", done => {
-      database('playlists').select('*').then(data => resolve(data))
-      function resolve(playlist) {
         chai.request(server)
-        .get(`/api/v1/playlists/${playlist[0].id}`)
+        .get(`/api/v1/playlists/1`)
         .end((err, response) => {
           response.should.have.status(200);
           response.should.be.json;
