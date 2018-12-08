@@ -72,11 +72,11 @@ app.patch('/api/v1/favorites/:id', (request, response) => {
 
   database('favorites').where('id', favorite_id).update(favorite_params)
   .then(favorite => {
-    return reponse.status(201).json(favorite)
-    })
-    .catch(error => {
-      response.status(500).json({ error });
-    });
+    reponse.status(201).json({"songs": favorite[0] });
+  })
+  .catch(error => {
+    response.status(500).json({ error });
+  });
 });
 
 app.delete('/api/v1/favorites/:id', (request, response) => {
