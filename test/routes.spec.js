@@ -76,7 +76,7 @@ describe("My API routes", () => {
   });
 
   describe("GET /api/v1/playlists", () => {
-    it("should return all of the playlists", done => {
+    it("should return all of the playlists and the songs associated", done => {
       chai.request(server)
       .get("/api/v1/playlists")
       .end((err, response) => {
@@ -85,7 +85,12 @@ describe("My API routes", () => {
         response.body.should.be.a('array');
         response.body.length.should.equal(1);
         response.body[0].should.have.property('playlist_name');
+        response.body[0].should.have.property('songs');
         response.body[0].playlist_name.should.equal('Birthday Songs');
+        response.body[0].songs[0].name.should.equal('Happy Birthday');
+        response.body[0].songs[0].artist_name.should.equal('Becca and Claire');
+        response.body[0].songs[0].genre.should.equal('Pop');
+        response.body[0].songs[0].song_rating.should.equal('100');
         done();
       });
     })
