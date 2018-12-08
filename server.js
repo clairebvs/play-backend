@@ -65,6 +65,23 @@ app.post('/api/v1/favorites', (request, response) => {
   });
 });
 
+app.patch("/api/v1/favorites/:id", request, response) => {
+  const favorite_id = request.params.id;
+  const favorite_params = request.body;
+
+  database('favorites').where("id", favorite_id).update({ favorite_params} )
+  .then(favorite => {
+    if (favorite === 0) {
+      return response.status(404).json("Favorite not found");
+    } else {
+      return reponse.status(201).json(driver);
+    })
+    .catch(error => {
+      return response.status(500).json({ error });
+    });
+  };
+});
+
 app.delete('/api/v1/favorites/:id', (request, response) => {
   database('favorites').where('id', request.params.id).del()
     .then(() => {
