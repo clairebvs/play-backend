@@ -54,9 +54,13 @@ app.delete('/api/v1/favorites/:id', (request, response) => {
 });
 
 app.get('/api/v1/playlists', (request, response) => {
-  database('playlists').select()
+  database.raw(`SELECT playlists.id, playlists.playlist_name, array_agg(json_build_object('id', favorites.id, 'name', favorites.name, 'artist_name', favorites.artist_name, 'genre', favorites.genre, 'song_rating', favorites.song_rating)) as songs
+  FROM playlists
+  INNER JOIN song_playlists ON playlists.id = song_playlists.playlist_id
+  INNER JOIN favorites ON favorites.id = song_playlists.favorite_id
+  GROUP BY playlists.id`)
     .then((playlists) => {
-      response.status(200).json(playlists);
+      response.status(200).json(playlists.rows);
     })
     .catch((error) => {
       response.status(500).json({ error });
