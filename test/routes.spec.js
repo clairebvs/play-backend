@@ -103,7 +103,6 @@ describe("My API routes", () => {
           response.body[0].playlist_name.should.equal('Birthday Songs');
           done();
         });
-      };
     });
   });
 
