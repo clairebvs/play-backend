@@ -93,6 +93,43 @@ app.get('/api/v1/playlists/:id/songs', (request, response) => {
     });
 });
 
+app.post('/api/v1/playlists/:playlist_id/songs/:id', (request, response) => {
+  var playlistId = params.request.playlist_id
+  var songId = params.request.id
+  var correspondingPlaylist;
+  var correspondingSong;
+
+  database('playlists').where('id', playlistId).select()
+   .then(playlists => {
+     if(playlists.length) {
+        correspondingPlaylist = playlists[0]['playlist_name'];
+      } else {
+        response.status(404).json({ error: `Could not find playlist with id ${playlistId}` });
+      }
+   })
+   .then(() => {
+    database('songs').where('id', songId).select()
+    .then(songs => {
+      if(songs.length) {
+         correspondingSong = songs[0]['name'];
+       } else {
+         response.status(404).json({ error: `Could not find song with id ${songId}` });
+       }
+    })
+   })
+   .then(() => {
+     if (correspondingPlaylist && correspondingSong) {
+       return database('song_playlists').insert([{ playlist_id: playlistId, favorite_id: songId }], 'id')
+     }
+   })
+   .then(() => {
+      response.status(201).json({ message: `Successfully added ${correspondingSong.name} to ${correspondingPlaylist.name}` })
+    })
+    .catch((error) => {
+      response.status(400).json({ error })
+    })
+});
+
 app.post('/api/v1/favorites', (request, response) => {
   const favorite = request.body;
 
