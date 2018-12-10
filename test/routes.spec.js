@@ -133,6 +133,40 @@ describe("My API routes", () => {
   });
   });
 
+  describe("POST /api/v1/playlists/:playlist_id/songs/:id", () => {
+    it("should add a song :id to the playlist_id", done => {
+      chai.request(server)
+      .post(`/api/v1/playlists/1/songs/1`)
+      .end((err, response) => {
+        response.should.be.json;
+        response.should.have.status(201);
+        response.body.should.have.property('message')
+        response.body.message.should.equal('Successfully added Happy Birthday to Birthday songs')
+        done();
+      })
+    })
+
+    it('should return a 400 error if the playlist is not found', done => {
+        chai.request(server)
+          .post('/api/v1/playlists/10/songs/1')
+          .end((error, response) => {
+            response.should.be.json
+            response.should.have.status(400)
+            done()
+          })
+      })
+
+    it('should return a 400 error if the songis not found', done => {
+        chai.request(server)
+          .post('/api/v1/playlists/1/songs/12')
+          .end((error, response) => {
+            response.should.be.json
+            response.should.have.status(400)
+            done()
+          })
+      })
+  });
+
   describe("POST /api/v1/favorites", () => {
     it("should add a new favorite song to the database", done => {
       chai.request(server)
