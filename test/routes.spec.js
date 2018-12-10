@@ -36,7 +36,7 @@ describe("My API routes", () => {
         response.should.have.status(200);
         response.should.be.json;
         response.body.should.be.a('array');
-        response.body.length.should.equal(1);
+        response.body.length.should.equal(3);
         response.body[0].should.have.property('name');
         response.body[0].should.have.property('artist_name');
         response.body[0].should.have.property('genre');
@@ -127,14 +127,14 @@ describe("My API routes", () => {
         response.should.have.status(200);
         response.should.be.json;
         response.body.should.be.a('array');
-        response.body.length.should.equal(1);
+        response.body.length.should.equal(2);
         response.body[0].should.have.property('playlist_name');
         response.body[0].should.have.property('songs');
         response.body[0].playlist_name.should.equal('Birthday Songs');
-        response.body[0].songs[0].name.should.equal('Happy Birthday');
-        response.body[0].songs[0].artist_name.should.equal('Becca and Claire');
+        response.body[0].songs[0].name.should.equal('Feliz Cumpleanos');
+        response.body[0].songs[0].artist_name.should.equal('Becca');
         response.body[0].songs[0].genre.should.equal('Pop');
-        response.body[0].songs[0].song_rating.should.equal('100');
+        response.body[0].songs[0].song_rating.should.equal('80');
         done();
       });
     })
