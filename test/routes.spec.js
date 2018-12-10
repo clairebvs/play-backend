@@ -134,7 +134,7 @@ describe("My API routes", () => {
   });
 
   describe("POST /api/v1/playlists/:playlist_id/songs/:id", () => {
-    it("should add a song :id to the playlist_id", done => {
+    it("should add a song :id with the playlist_id to the song_playlist table", done => {
       chai.request(server)
       .post(`/api/v1/playlists/1/songs/1`)
       .end((err, response) => {
