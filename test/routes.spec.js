@@ -35,7 +35,7 @@ describe("My API routes", () => {
         response.should.have.status(200);
         response.should.be.json;
         response.body.should.be.a('array');
-        response.body.length.should.equal(1);
+        response.body.length.should.equal(4);
         response.body[0].should.have.property('name');
         response.body[0].should.have.property('artist_name');
         response.body[0].should.have.property('genre');
@@ -83,7 +83,7 @@ describe("My API routes", () => {
         response.should.have.status(200);
         response.should.be.json;
         response.body.should.be.a('array');
-        response.body.length.should.equal(1);
+        response.body.length.should.equal(2);
         response.body[0].should.have.property('playlist_name');
         response.body[0].should.have.property('songs');
         response.body[0].playlist_name.should.equal('Birthday Songs');
@@ -129,10 +129,10 @@ describe("My API routes", () => {
         response.body[0].should.have.property('playlist_name');
         response.body[0].should.have.property('songs');
         response.body[0].playlist_name.should.equal('Birthday Songs');
-        response.body[0].songs[1].name.should.equal('Happy Birthday');
-        response.body[0].songs[1].artist_name.should.equal('Becca and Claire');
-        response.body[0].songs[1].genre.should.equal('Pop');
-        response.body[0].songs[1].song_rating.should.equal('100');
+        response.body[0].songs[0].name.should.equal('Happy Birthday');
+        response.body[0].songs[0].artist_name.should.equal('Becca and Claire');
+        response.body[0].songs[0].genre.should.equal('Pop');
+        response.body[0].songs[0].song_rating.should.equal('100');
         done();
       });
   });
@@ -141,9 +141,10 @@ describe("My API routes", () => {
   describe("POST /api/v1/playlists/:playlist_id/songs/:id", () => {
     it("should add a song :id with the playlist_id to the song_playlist table", done => {
       chai.request(server)
-      .post(`/api/v1/playlists/1/songs/1`)
+      .post(`/api/v1/playlists/1/songs/4`)
       .end((err, response) => {
-        response.should.be.json;
+        // response.should.be.json;
+        console.log(response.body)
         response.should.have.status(201);
         response.body.should.have.property('message')
         response.body.message.should.equal('Successfully added Happy Birthday to Birthday songs')
@@ -155,7 +156,7 @@ describe("My API routes", () => {
         chai.request(server)
           .post('/api/v1/playlists/10/songs/1')
           .end((error, response) => {
-            response.should.be.json
+            // response.should.be.json
             response.should.have.status(400)
             done()
           })
@@ -165,7 +166,7 @@ describe("My API routes", () => {
         chai.request(server)
           .post('/api/v1/playlists/1/songs/12')
           .end((error, response) => {
-            response.should.be.json
+            // response.should.be.json
             response.should.have.status(400)
             done()
           })
