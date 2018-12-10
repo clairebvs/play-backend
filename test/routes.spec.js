@@ -143,11 +143,9 @@ describe("My API routes", () => {
       chai.request(server)
       .post(`/api/v1/playlists/1/songs/4`)
       .end((err, response) => {
-        // response.should.be.json;
-        console.log(response.body)
         response.should.have.status(201);
         response.body.should.have.property('message')
-        response.body.message.should.equal('Successfully added Happy Birthday to Birthday songs')
+        response.body.message.should.equal('Successfully added Joyeux Anniversaire to Birthday Songs')
         done();
       })
     })
@@ -156,8 +154,7 @@ describe("My API routes", () => {
         chai.request(server)
           .post('/api/v1/playlists/10/songs/1')
           .end((error, response) => {
-            // response.should.be.json
-            response.should.have.status(400)
+            response.should.have.status(404)
             done()
           })
       })
@@ -166,8 +163,7 @@ describe("My API routes", () => {
         chai.request(server)
           .post('/api/v1/playlists/1/songs/12')
           .end((error, response) => {
-            // response.should.be.json
-            response.should.have.status(400)
+            response.should.have.status(404)
             done()
           })
       })

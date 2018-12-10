@@ -101,42 +101,39 @@ app.get('/api/v1/playlists/:id/songs', (request, response) => {
 app.post('/api/v1/playlists/:playlist_id/songs/:id', (request, response) => {
   var playlistId = request.params.playlist_id
   var favoriteId = request.params.id
+  var correspondingFavorite;
+  var correspondingPlaylist;
 
-  database('playlists').where('id', playlistId).select()
+  var playlist = database('playlists').where('id', playlistId).select()
    .then(playlists => {
      if(playlists.length) {
-        const correspondingPlaylist = playlists[0]['playlist_name'];
+        correspondingPlaylist = playlists[0]['playlist_name'];
       } else {
         response.status(404).json({ error: `Could not find playlist with id ${playlistId}` });
       }
-   })
-   .then(() => {
-    database('favorites').where('id', favoriteId).select()
-      .then(favorites => {
-        if(favorites.length) {
-          const correspondingFavorite = favorites[0]['name'];
-          console.log(correspondingFavorite)
-         } else {
-           response.status(404).json({ error: `Could not find song with id ${favoriteId}` });
-         }
-      })
-       .then(() => {
-         return Promise.all([
-         if (correspondingPlaylist && correspondingFavorite) {
-           console.log('AHHHHHHHAAAAAAAHHH')
-           console.log(correspondingPlaylist)
-           console.log(correspondingFavorite)
-           return database('song_playlists').insert([{ playlist_id: playlistId, favorite_id: favoriteId }])
-         }
-       })
-         .then(() => {
-            response.status(201).json({ message: `Successfully added ${correspondingFavorite} to ${correspondingPlaylist}` })
-          })
-    .catch((error) => {
-      response.status(400).json({ error })
+    });
+
+  var favorite = database('favorites').where('id', favoriteId).select()
+    .then(favorites => {
+      if(favorites.length) {
+        correspondingFavorite = favorites[0]['name'];
+       } else {
+         response.status(404).json({ error: `Could not find song with id ${favoriteId}` });
+       }
     })
-    ])
-  })
+
+  return Promise.all([playlist, favorite])
+  .then(() => {
+    if (correspondingPlaylist && correspondingFavorite) {
+      return database('song_playlists').insert([{ playlist_id: playlistId, favorite_id: favoriteId }])
+     }
+   })
+     .then(() => {
+        response.status(201).json({ message: `Successfully added ${correspondingFavorite} to ${correspondingPlaylist}` })
+      })
+    .catch((error) => {
+      response.status(404).json({ error })
+    })
 });
 
 app.post('/api/v1/favorites', (request, response) => {
