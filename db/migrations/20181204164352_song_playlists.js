@@ -4,7 +4,8 @@ exports.up = function(knex, Promise) {
     knex.schema.createTable('song_playlists', function(table) {
       table.integer('playlist_id').unsigned()
       table.foreign('playlist_id')
-        .references('playlists.id');
+        .references('playlists.id')
+        .onDelete('CASCADE');
       table.integer('favorite_id').unsigned()
       table.foreign('favorite_id')
         .references('favorites.id')
