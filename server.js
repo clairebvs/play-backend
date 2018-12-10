@@ -75,7 +75,7 @@ app.delete('/api/v1/favorites/:id', (request, response) => {
     });
 });
 
-// ---------- FAVORITES ROUTES ----------- //
+// ---------- PLAYLISTS ROUTES ----------- //
 
 app.get('/api/v1/playlists', (request, response) => {
   database.raw(`SELECT playlists.id, playlists.playlist_name, array_agg(json_build_object('id', favorites.id, 'name', favorites.name, 'artist_name', favorites.artist_name, 'genre', favorites.genre, 'song_rating', favorites.song_rating)) as songs
