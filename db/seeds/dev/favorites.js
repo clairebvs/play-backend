@@ -1,25 +1,14 @@
 exports.seed = function(knex, Promise) {
-  return knex('song_playlists').del()
-    .then(() => knex('favorites').del())
-    .then(() => knex('playlists').del())
+  return knex('favorites').del()
     .then(() => {
       return Promise.all([
-        knex('favorites').insert({
-          name: 'Happy Birthday', artist_name: 'Becca and Claire', genre: 'Pop', song_rating: 100
-        }, 'id')
-        .then(favorite1 => {
-          return knex('playlists').insert({
-            playlist_name: 'Birthday Songs'
-          }, 'id')
-        .then(playlist1 => {
-          return knex('song_playlists').insert({
-            favorite_id: favorite1[0],
-            playlist_id: playlist1[0]
-          })
-        })
-        })
-        .then(() => console.log('Seeding complete!'))
-        .catch(error => console.log(`Error seeding data: ${error}`))
+        knex('favorites').insert([
+          {id: 1, name: 'Happy Birthday', artist_name: 'Becca and Claire', genre: 'Pop', song_rating: '100'},
+          {id: 2, name: 'Feliz Cumpleanos', artist_name: 'Becca', genre: 'Pop', song_rating: '80'},
+          {id: 3, name: 'We are the Champions', artist_name: 'Queen', genre: 'Rock', song_rating: '50'}
+        ])
+      .then(() => console.log('Seeding complete!'))
+      .catch(error => console.log(`Error seeding data: ${error}`))
       ])
     })
     .catch(error => console.log(`Error seeding data: ${error}`));
