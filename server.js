@@ -88,6 +88,7 @@ app.get('/api/v1/playlists/:id/songs', (request, response) => {
   FROM playlists
   INNER JOIN song_playlists ON playlists.id = song_playlists.playlist_id
   INNER JOIN favorites ON favorites.id = song_playlists.favorite_id
+  WHERE playlists.id = ${request.params.id}
   GROUP BY playlists.id`)
     .then(favorites => {
         response.status(200).json(favorites.rows);
