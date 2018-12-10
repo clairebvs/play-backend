@@ -179,7 +179,19 @@ describe("My API routes", () => {
         response.body[0].songs[1].song_rating.should.equal('100');
         done();
       });
+    });
   });
+
+  describe("DELETE /api/v1/playlists/:id", () => {
+    it("should delete a playlist by id", done => {
+      chai.request(server)
+      .delete("/api/v1/playlists/1")
+      .end((err, response) => {
+        response.should.have.status(204);
+        response.body.should.be.a('object');
+        done();
+      });
+    })
   });
 
 });
