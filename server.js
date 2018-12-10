@@ -11,6 +11,7 @@ app.use(bodyParser.urlencoded( { extended: true }));
 app.set('port', process.env.PORT || 3000);
 app.locals.title = 'Play';
 
+pry = require('pryjs');
 
 app.get('/', (request, response) => {
   response.send('Hello, Play');
@@ -32,7 +33,6 @@ app.get('/api/v1/favorites/:id', (request, response) => {
   database('favorites').where('id', request.params.id).select()
     .then(favorites => {
       if (favorites.length) {
-        console.log(favorites.length);
         response.status(200).json(favorites);
       } else {
         response.status(404).json({
@@ -119,6 +119,64 @@ app.get('/api/v1/playlists/:id/songs', (request, response) => {
     })
     .catch((error) => {
       response.status(500).json({ error });
+    });
+});
+
+app.post('/api/v1/playlists/:playlist_id/songs/:id', (request, response) => {
+  var playlistId = request.params.playlist_id
+  var favoriteId = request.params.id
+  var correspondingFavorite;
+  var correspondingPlaylist;
+
+  var playlist = database('playlists').where('id', playlistId).select()
+   .then(playlists => {
+     if(playlists.length) {
+        correspondingPlaylist = playlists[0]['playlist_name'];
+      } else {
+        response.status(404).json({ error: `Could not find playlist with id ${playlistId}` });
+      }
+    });
+
+  var favorite = database('favorites').where('id', favoriteId).select()
+    .then(favorites => {
+      if(favorites.length) {
+        correspondingFavorite = favorites[0]['name'];
+       } else {
+         response.status(404).json({ error: `Could not find song with id ${favoriteId}` });
+       }
+    })
+
+  return Promise.all([playlist, favorite])
+  .then(() => {
+    if (correspondingPlaylist && correspondingFavorite) {
+      return database('song_playlists').insert([{ playlist_id: playlistId, favorite_id: favoriteId }])
+     }
+   })
+     .then(() => {
+        response.status(201).json({ message: `Successfully added ${correspondingFavorite} to ${correspondingPlaylist}` })
+      })
+    .catch((error) => {
+      response.status(404).json({ error })
+    })
+});
+
+app.post('/api/v1/favorites', (request, response) => {
+  const favorite = request.body;
+
+  for (let requiredParameter of ['name', 'artist_name', 'genre', 'song_rating']) {
+    if (!favorite[requiredParameter]) {
+      return response
+        .status(422)
+        .send({ error: `Expected format: { 'name': <String>, artist_name: <String>, 'genre': <String>, 'song_rating': <Integer> } You're missing a "${requiredParameter}" property.`});
+    }
+  }
+
+  database('favorites').insert(favorite, '*')
+    .then(favorite => {
+      response.status(201).json({"songs": favorite[0] });
+        })
+    .catch((error) => {
+      response.status(404).json({ error });
     });
 });
 
