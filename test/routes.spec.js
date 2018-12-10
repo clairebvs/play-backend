@@ -26,6 +26,7 @@ describe("My API routes", () => {
     });
   });
 
+  // ---------- FAVORITES ENDPOINTS ----------- //
 
   describe("GET /api/v1/favorites", () => {
     it("should return all of the favorites", done => {
@@ -74,6 +75,49 @@ describe("My API routes", () => {
       };
     });
   });
+
+  describe("POST /api/v1/favorites", () => {
+    it("should add a new favorite song to the database", done => {
+      chai.request(server)
+      .post("/api/v1/favorites")
+      .send({
+        name: "Feliz Cumpleanos",
+        artist_name: "Becca",
+        genre: "Pop",
+        song_rating: 100
+      })
+      .end((err, response) => {
+        should.exist(response.body)
+        response.should.have.status(201);
+        response.should.be.json;
+        response.body["songs"].should.be.a('object');
+        response.body["songs"].should.have.property('id');
+        response.body["songs"].should.have.property('name');
+        response.body["songs"].should.have.property('artist_name');
+        response.body["songs"].should.have.property('genre');
+        response.body["songs"].should.have.property('song_rating');
+        response.body["songs"].name.should.equal('Feliz Cumpleanos');
+        response.body["songs"].artist_name.should.equal('Becca');
+        response.body["songs"].genre.should.equal('Pop');
+        response.body["songs"].song_rating.should.equal('100');
+        done();
+      });
+    });
+  });
+
+  describe("DELETE /api/v1/favorites/:id", () => {
+    it("should delete a favorite by id", done => {
+      chai.request(server)
+      .delete("/api/v1/favorites/1")
+      .end((err, response) => {
+        response.should.have.status(204);
+        response.body.should.be.a('object');
+        done();
+      });
+    })
+  });
+
+  // ---------- PLAYLISTS ENDPOINTS ----------- //
 
   describe("GET /api/v1/playlists", () => {
     it("should return all of the playlists and the songs associated", done => {
@@ -138,32 +182,4 @@ describe("My API routes", () => {
   });
   });
 
-  describe("POST /api/v1/favorites", () => {
-    it("should add a new favorite song to the database", done => {
-      chai.request(server)
-      .post("/api/v1/favorites")
-      .send({
-          name: "Feliz Cumpleanos",
-          artist_name: "Becca",
-          genre: "Pop",
-          song_rating: 100
-      })
-      .end((err, response) => {
-        should.exist(response.body)
-        response.should.have.status(201);
-        response.should.be.json;
-        response.body["songs"].should.be.a('object');
-        response.body["songs"].should.have.property('id');
-        response.body["songs"].should.have.property('name');
-        response.body["songs"].should.have.property('artist_name');
-        response.body["songs"].should.have.property('genre');
-        response.body["songs"].should.have.property('song_rating');
-        response.body["songs"].name.should.equal('Feliz Cumpleanos');
-        response.body["songs"].artist_name.should.equal('Becca');
-        response.body["songs"].genre.should.equal('Pop');
-        response.body["songs"].song_rating.should.equal('100');
-        done();
-      });
-    });
-  });
 });
