@@ -128,10 +128,10 @@ describe("My API routes", () => {
         response.body[0].should.have.property('playlist_name');
         response.body[0].should.have.property('songs');
         response.body[0].playlist_name.should.equal('Birthday Songs');
-        response.body[0].songs[0].name.should.equal('Feliz Cumpleanos');
-        response.body[0].songs[0].artist_name.should.equal('Becca');
+        response.body[0].songs[0].name.should.equal('Happy Birthday');
+        response.body[0].songs[0].artist_name.should.equal('Becca and Claire');
         response.body[0].songs[0].genre.should.equal('Pop');
-        response.body[0].songs[0].song_rating.should.equal('80');
+        response.body[0].songs[0].song_rating.should.equal('100');
         done();
       });
     })
@@ -167,10 +167,10 @@ describe("My API routes", () => {
         response.body[0].should.have.property('playlist_name');
         response.body[0].should.have.property('songs');
         response.body[0].playlist_name.should.equal('Birthday Songs');
-        response.body[0].songs[0].name.should.equal('Feliz Cumpleanos');
-        response.body[0].songs[0].artist_name.should.equal('Becca');
+        response.body[0].songs[0].name.should.equal('Happy Birthday');
+        response.body[0].songs[0].artist_name.should.equal('Becca and Claire');
         response.body[0].songs[0].genre.should.equal('Pop');
-        response.body[0].songs[0].song_rating.should.equal('80');
+        response.body[0].songs[0].song_rating.should.equal('100');
         done();
       });
     });
@@ -197,7 +197,7 @@ describe("My API routes", () => {
           })
       })
 
-    it('should return a 400 error if the songis not found', done => {
+    it('should return a 400 error if the song is not found', done => {
         chai.request(server)
           .post('/api/v1/playlists/1/songs/12')
           .end((error, response) => {
@@ -210,13 +210,32 @@ describe("My API routes", () => {
   describe("DELETE /api/v1/playlists/:playlist_id/songs/:id", () => {
     it("should delete a playlist by id", done => {
       chai.request(server)
-      .delete("/api/v1/playlists/1")
+      .delete("/api/v1/playlists/1/songs/2")
       .end((err, response) => {
         response.should.have.status(204);
-        response.body.should.be.a('object');
+        console.log("BAHAHHAHAHAHAH");
+        response.body.message.should.equal('Successfully removed Feliz Cumpleanos from Birthday Songs')
         done();
       });
     })
+
+    it('should return a 400 error if the playlist is not found', done => {
+        chai.request(server)
+          .post('/api/v1/playlists/1/songs/20')
+          .end((error, response) => {
+            response.should.have.status(404)
+            done()
+          })
+      })
+
+    it('should return a 400 error if the song is not found', done => {
+        chai.request(server)
+          .post('/api/v1/playlists/20/songs/3')
+          .end((error, response) => {
+            response.should.have.status(404)
+            done()
+          })
+      })
   });
 
 });
