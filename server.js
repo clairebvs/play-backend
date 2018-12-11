@@ -183,7 +183,28 @@ app.post('/api/v1/favorites', (request, response) => {
 app.delete('/api/v1/playlists/:playlist_id/songs/:id', (request, response) => {
   const playlistId = request.params.playlist_id;
   const favoriteId = request.params.id;
-  
+
+  var playlistName;
+  var favoriteName;
+
+  database("playlists").where("id", playlistId).select()
+  .then(playlists => {
+    if(playlists.length) {
+      playlistName = playlists[0]['playlist_name']
+    } else {
+      response.status(404).json({ error: `Could not find playlist with id ${playlistId}` });
+    }
+  });
+
+  database("favorites").where("id", favoriteId).select()
+  .then(favorites => {
+    if(favorites.length) {
+      favoriteName = favorites[0]['name']
+    } else {
+      response.status(404).json({ error: `Could not find favorite with id ${favoriteId}` });
+    }
+  });
+
   database("song_playlists")
     .where({
       playlist_id: playlistId,
@@ -194,8 +215,7 @@ app.delete('/api/v1/playlists/:playlist_id/songs/:id', (request, response) => {
       if (song_playlist === 0) {
         response.status(404).json("Song not found on playlist");
       } else {
-        console.log(`-------------------The playlist is is ${playlistId}, and the favorite is ${favoriteId}------------------`);
-        response.status(200).json({ message: `Successfully removed song from playlist` });
+        response.status(200).json({ message: `Successfully removed ${favoriteName} from ${playlistName}` });
       }
     })
     .catch(error => {
