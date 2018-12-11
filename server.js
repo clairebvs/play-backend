@@ -6,6 +6,8 @@ const environment = process.env.NODE_ENV || 'development';
 const configuration = require('./knexfile')[environment];
 const database = require('knex')(configuration);
 
+require('dotenv').config()
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded( { extended: true }));
 app.set('port', process.env.PORT || 3000);
@@ -190,6 +192,27 @@ app.delete('/api/v1/playlists/:id', (request, response) => {
     });
 });
 
+const fetch = require("node-fetch");
+
+app.get('/api/v1/search', function(request, response) {
+  var artist = request.body.artist;
+  var api_key = process.env.DB_MUSIC_KEY
+
+  var uri = `http://api.musixmatch.com/ws/1.1/track.search?q_artist=${artist}&page_size=3&page=1&apikey=${api_key}`
+
+
+  fetch(`${uri}`)
+    .then(function(response) {
+      return response.json();
+    })
+    .then(function(myJson) {
+      console.log(JSON.stringify(myJson));
+    });
+
+  // var req = request(options, { json: true }, (err, res, body) => {
+  //   console.log(req.body)
+  // })
+});
 
 app.listen(app.get('port'), () => {
   console.log(`${app.locals.title} is running on ${app.get('port')}.`);
