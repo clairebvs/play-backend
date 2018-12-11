@@ -8,7 +8,6 @@ exports.seed = function(knex, Promise) {
           {id: 3, name: 'We are the Champions', artist_name: 'Queen', genre: 'Rock', song_rating: '50'},
           {id: 4, name: 'Joyeux Anniversaire', artist_name: 'Claire', genre: 'Pop', song_rating: '40'},
         ])
-      .then(() => console.log('Seeding complete!'))
       .catch(error => console.log(`Error seeding data: ${error}`))
       ])
     })
