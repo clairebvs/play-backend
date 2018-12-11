@@ -7,7 +7,6 @@ exports.seed = function(knex, Promise) {
           {favorite_id: 1, playlist_id: 1},
           {favorite_id: 3, playlist_id: 2}
         ])
-      .then(() => console.log('Seeding complete!'))
       .catch(error => console.log(`Error seeding data: ${error}`))
       ])
     })
