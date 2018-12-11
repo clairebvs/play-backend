@@ -144,7 +144,7 @@ app.post('/api/v1/playlists/:playlist_id/songs/:id', (request, response) => {
        } else {
          response.status(404).json({ error: `Could not find song with id ${favoriteId}` });
        }
-    })
+    });
 
   return Promise.all([playlist, favorite])
   .then(() => {
@@ -180,16 +180,28 @@ app.post('/api/v1/favorites', (request, response) => {
     });
 });
 
-app.delete('/api/v1/playlists/:id', (request, response) => {
-  database('playlists').where('id', request.params.id).del()
-    .then(() => {
-      return response.status(204).send({ message: `Playlist ${request.params.id} successfully removed from playlists`})
+app.delete('/api/v1/playlists/:playlist_id/songs/:id', (request, response) => {
+  const playlistId = request.params.playlist_id;
+  const favoriteId = request.params.id;
+  
+  database("song_playlists")
+    .where({
+      playlist_id: playlistId,
+      favorite_id: favoriteId
     })
-    .catch((error) => {
-      response.status(404).json({ error });
+    .del()
+    .then(song_playlist => {
+      if (song_playlist === 0) {
+        response.status(404).json("Song not found on playlist");
+      } else {
+        console.log(`-------------------The playlist is is ${playlistId}, and the favorite is ${favoriteId}------------------`);
+        response.status(200).json({ message: `Successfully removed song from playlist` });
+      }
+    })
+    .catch(error => {
+      return response.status(500).json({ error });
     });
 });
-
 
 app.listen(app.get('port'), () => {
   console.log(`${app.locals.title} is running on ${app.get('port')}.`);

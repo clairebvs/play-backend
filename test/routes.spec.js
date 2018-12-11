@@ -211,12 +211,11 @@ describe("My API routes", () => {
     it("should delete a playlist by id", done => {
       chai.request(server)
       .delete("/api/v1/playlists/1/songs/2")
-      .end((err, response) => {
-        response.should.have.status(204);
-        console.log("BAHAHHAHAHAHAH");
+      .end((error, response) => {
+        response.should.have.status(200);
         response.body.message.should.equal('Successfully removed Feliz Cumpleanos from Birthday Songs')
-        done();
-      });
+        done()
+      })
     })
 
     it('should return a 400 error if the playlist is not found', done => {
