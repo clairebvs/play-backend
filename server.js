@@ -6,6 +6,8 @@ const environment = process.env.NODE_ENV || 'development';
 const configuration = require('./knexfile')[environment];
 const database = require('knex')(configuration);
 
+require('dotenv').config()
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded( { extended: true }));
 app.set('port', process.env.PORT || 3000);
@@ -221,6 +223,42 @@ app.delete('/api/v1/playlists/:playlist_id/songs/:id', (request, response) => {
     .catch(error => {
       return response.status(500).json({ error });
     });
+});
+
+const fetch = require("node-fetch");
+
+app.post('/api/v1/search', (request, response) => {
+  var artist = request.body.artist;
+  var api_key = process.env.DB_MUSIC_KEY;
+  var uri = `http://api.musixmatch.com/ws/1.1/track.search?q_artist=${artist}&page_size=5&page=1&apikey=${api_key}`
+
+  function fetchAndResponse() {
+    var payload = [];
+
+    fetch(`${uri}`)
+      .then(response => response.json())
+      .then(data => getMusic(data))
+      .catch(error => console.error({error}));
+
+    const getMusic = (data) => {
+      trackList = data["message"]["body"]["track_list"]
+      trackList.forEach(function(trackList) {
+           payload.push(
+            {
+              "name": trackList["track"]["track_name"],
+              "artist_name": trackList["track"]["artist_name"],
+              "genre": trackList["track"]["primary_genres"]["music_genre_list"][0],
+              "song_rating": trackList["track"]["track_rating"]
+            }
+            )
+            console.log(payload)
+        return payload
+      })
+    }
+
+  }
+
+  fetchAndResponse();
 });
 
 app.listen(app.get('port'), () => {
