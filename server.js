@@ -250,7 +250,7 @@ app.post('/api/v1/search', (request, response) => {
         if (trackList["track"]["primary_genres"]["music_genre_list"][0]){
           genre = trackList["track"]["primary_genres"]["music_genre_list"][0]["music_genre"]["music_genre_name"];
         } else {
-          genre = 'None';
+          genre = 'No Genre Supplied';
         }
 
         payload.push(
