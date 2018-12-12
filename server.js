@@ -246,11 +246,18 @@ app.post('/api/v1/search', (request, response) => {
     payload = [];
     trackList = incoming_data["message"]["body"]["track_list"]
     trackList.forEach(function(trackList) {
-         payload.push(
+      var genre = "";
+        if (trackList["track"]["primary_genres"]["music_genre_list"][0]){
+          genre = trackList["track"]["primary_genres"]["music_genre_list"][0]["music_genre"]["music_genre_name"];
+        } else {
+          genre = 'No Genre Supplied';
+        }
+
+        payload.push(
           {
             "name": trackList["track"]["track_name"],
             "artist_name": trackList["track"]["artist_name"],
-            "genre": trackList["track"]["primary_genres"]["music_genre_list"][0],
+            "genre": genre,
             "song_rating": trackList["track"]["track_rating"]
           })
     })
