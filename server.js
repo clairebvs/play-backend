@@ -194,24 +194,38 @@ app.delete('/api/v1/playlists/:id', (request, response) => {
 
 const fetch = require("node-fetch");
 
-app.get('/api/v1/search', function(request, response) {
+app.post('/api/v1/search', (request, response) => {
   var artist = request.body.artist;
-  var api_key = process.env.DB_MUSIC_KEY
+  var api_key = process.env.DB_MUSIC_KEY;
+  var uri = `http://api.musixmatch.com/ws/1.1/track.search?q_artist=${artist}&page_size=5&page=1&apikey=${api_key}`
 
-  var uri = `http://api.musixmatch.com/ws/1.1/track.search?q_artist=${artist}&page_size=3&page=1&apikey=${api_key}`
+  function fetchAndResponse() {
+    var payload = [];
 
+    fetch(`${uri}`)
+      .then(response => response.json())
+      .then(data => getMusic(data))
+      .catch(error => console.error({error}));
 
-  fetch(`${uri}`)
-    .then(function(response) {
-      return response.json();
-    })
-    .then(function(myJson) {
-      console.log(JSON.stringify(myJson));
-    });
+    const getMusic = (data) => {
+      trackList = data["message"]["body"]["track_list"]
+      trackList.forEach(function(trackList) {
+           payload.push(
+            {
+              "name": trackList["track"]["track_name"],
+              "artist_name": trackList["track"]["artist_name"],
+              "genre": trackList["track"]["primary_genres"]["music_genre_list"][0],
+              "song_rating": trackList["track"]["track_rating"]
+            }
+            )
+            console.log(payload)
+        return payload
+      })
+    }
 
-  // var req = request(options, { json: true }, (err, res, body) => {
-  //   console.log(req.body)
-  // })
+  }
+
+  fetchAndResponse();
 });
 
 app.listen(app.get('port'), () => {
