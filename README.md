@@ -3,8 +3,6 @@
 Play is a full-stack JS / Express music-themed CRUD application and a partner project for Module 4 Back End students at Turing School of Software & Design. The project introduces students to Express with a Postgres database, Node.js, and HTTP testing in these frameworks.
  
 Looking for our front end? Visit [play-frontend](https://github.com/BeccaHyland/play-frontend).
-
-<img width="902" alt="screen shot 2018-12-13 at 7 21 57 am" src="https://user-images.githubusercontent.com/39714935/49960152-c794c780-fecc-11e8-8c76-02c41b5580ba.png">
  
 Play interfaces with the external API [Musixmatch](https://developer.musixmatch.com/)  to populate songs by a searched artist, then allows the user to track favorite songs and add favorites to playlists.
  
@@ -29,9 +27,40 @@ Play interfaces with the external API [Musixmatch](https://developer.musixmatch.
  
  GET `/api/v1/favorites`
  * returns all favorited songs in the database
+ ex : `[
+        {
+         id: 1,
+         name: "Happy Birthday",
+         artist_name: "Becca and Claire",
+         genre: "Pop",
+         song_rating: "100",
+         created_at: "2018-12-13T16:26:25.726Z",
+         updated_at: "2018-12-13T16:26:25.726Z"
+        },
+        {
+          id: 2,
+          name: "Feliz Cumpleanos",
+          artist_name: "Becca",
+          genre: "Pop",
+          song_rating: "80",
+          created_at: "2018-12-13T16:26:25.726Z",
+          updated_at: "2018-12-13T16:26:25.726Z"
+         }
+        ]`
  
  GET `/api/v1/favorites/INSERT ID HERE`
  * returns one favorited song by its id with its attributes
+ ex : `[
+        {
+         id: 1,
+         name: "Happy Birthday",
+         artist_name: "Becca and Claire",
+         genre: "Pop",
+         song_rating: "100",
+         created_at: "2018-12-13T16:26:25.726Z",
+         updated_at: "2018-12-13T16:26:25.726Z"
+        }
+       ]`
  
  POST `/api/v1/favorite1`
  * adds a song to the database as a favorite
@@ -44,11 +73,70 @@ Play interfaces with the external API [Musixmatch](https://developer.musixmatch.
  GET `/api/v1/playlists`
  * returns all playlists in the database with associated songs for each playlist
  
+ ex : `[
+        {
+         id: 1,
+         ranking: "90.0000000000000000",
+         playlist_name: "Birthday Songs",
+         songs: [
+                 {
+                  id: 2,
+                  name: "Feliz Cumpleanos",
+                  artist_name: "Becca",
+                  genre: "Pop",
+                  song_rating: "80"
+                 },
+                 {}
+                ]
+                 },
+        {
+         id: 2,
+         ranking: "50.0000000000000000",
+         playlist_name: "Party",
+         songs: [
+                 {}
+                 ]
+        }
+       ]`
+ 
  GET `/api/v1/playlist/INSERT ID HERE`
  * returns one playlist by its id with its attributes
  
+ ex : `[
+        {
+         id: 1,
+         playlist_name: "Birthday Songs",
+         created_at: "2018-12-13T16:26:25.741Z",
+         updated_at: "2018-12-13T16:26:25.741Z",
+         ranking: 0
+        }
+       ]`
+ 
   GET `/api/v1/playlist/INSERT ID HERE/songs`
  * returns one playlist by its id with associated songs for that playlist
+ 
+ ex : `[
+        {
+         id: 1,
+         playlist_name: "Birthday Songs",
+         songs: [
+                {
+                  id: 2,
+                  name: "Feliz Cumpleanos",
+                  artist_name: "Becca",
+                  genre: "Pop",
+                  song_rating: "80"
+                },
+                {
+                  id: 1,
+                  name: "Happy Birthday",
+                  artist_name: "Becca and Claire",
+                  genre: "Pop",
+                  song_rating: "100"
+                }
+                ]
+        }
+       ]`
 
  POST `/api/v1/playlists/INSERT playlist id here/songs/INSERT song id here`
  * adds a favorite song to a playlist
