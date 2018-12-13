@@ -29,7 +29,7 @@ Play interfaces with the external API [Musixmatch](https://developer.musixmatch.
  * returns all favorited songs in the database
  
  GET `/api/v1/favorites/INSERT ID HERE`
- * returns one favorited song by its id
+ * returns one favorited song by its id with its attributes
  
  POST `/api/v1/favorite1`
  * adds a song to the database as a favorite
@@ -43,6 +43,9 @@ Play interfaces with the external API [Musixmatch](https://developer.musixmatch.
  * returns all playlists in the database with associated songs for each playlist
  
  GET `/api/v1/playlist/INSERT ID HERE`
+ * returns one playlist by its id with its attributes
+ 
+  GET `/api/v1/playlist/INSERT ID HERE/songs`
  * returns one playlist by its id with associated songs for that playlist
 
  POST `/api/v1/playlists/INSERT playlist id here/songs/INSERT song id here`
