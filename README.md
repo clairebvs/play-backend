@@ -6,11 +6,21 @@ Play is a full-stack JS / Express music-themed CRUD application and a partner pr
  
  Play interfaces with an external API to populate songs by a searched artist, then allows the user to track favorite songs and add favorites to playlists.
  
- ## How to Use
+ ## Setup
 1. Clone this repository
-2. Inside the repo and on the command line, run the commands `npm install` and `npm start`
-3. In your browser or an HTTP client like Postman, navigate to `localhost:3000`
-4. Append the endpoints below to your request to view results
+2. Inside the repo and on the command line, run the command `npm install` 
+3. Next, to create the database, run `psql` and `CREATE DATABASE playbackend`, then exit postgresql with `\q`
+4. Enter the following at the command line:
+`npm init --yes`
+`npm install knex -g`
+`npm install knex --save`
+`npm install pg --save`
+`npm start`
+5. Migrate your database with the command `knex migrate:latest`
+6. You are ready to query Play for data! In your browser or an HTTP client like Postman, navigate to `localhost:3000`
+7. Append any the endpoints below to your request to view results
+ * For POST favorites you will need Postman to send the body (see below)
+ * Remember: if using Postman, set two Headers as follows: Keys: Content-Type, Accept , Values: application/json (for both)
  
  ## Endpoints
  This API supplies the following json endpoints:
