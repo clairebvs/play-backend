@@ -2,9 +2,9 @@
 
 Play is a full-stack JS / Express music-themed CRUD application and a partner project for Module 4 Back End students at Turing School of Software & Design. The project introduces students to Express with a Postgres database, Node.js, and HTTP testing in these frameworks.
  
- Looking for the front end? Visit [play-frontend](https://github.com/BeccaHyland/play-frontend).
+Looking for our front end? Visit [play-frontend](https://github.com/BeccaHyland/play-frontend).
  
- Play interfaces with an external API to populate songs by a searched artist, then allows the user to track favorite songs and add favorites to playlists.
+Play interfaces with the external API [Musixmatch](https://developer.musixmatch.com/)  to populate songs by a searched artist, then allows the user to track favorite songs and add favorites to playlists.
  
  ## Setup
 1. Clone this repository
